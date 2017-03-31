@@ -1,18 +1,14 @@
 import * as firebase from 'firebase';
 
 class Firebase {
-
-    /**
-     * Initialises Firebase
-     */
-    static initialise() {
-        firebase.initializeApp({
-            apiKey: "yourkeyhere",
-            authDomain: "projName-d0c3e.firebaseapp.com",
-            databaseURL: "https://projName-d0c3e.firebaseio.com",
-            storageBucket: "projName-d0c3e.appspot.com"
-        });
-    }
+  static initialise() {
+    firebase.initializeApp({
+      apiKey: 'AIzaSyDU_f1yxtqNzbKrb-DksDYicBw6mS7pP4g',
+      authDomain: 'fitbook-b8f06.firebaseapp.com',
+      databaseURL: 'https://fitbook-b8f06.firebaseio.com',
+      storageBucket: 'fitbook-b8f06.appspot.com',
+    });
+  }
 
 }
 
