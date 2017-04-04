@@ -13,18 +13,30 @@ import {
 } from 'react-native';
 import * as firebase from "firebase";
 
-import Firebase from './includes/firebase/firebase';
-import Login from "./includes/views/login";
+const firebaseConfig = {
+  apiKey: "AIzaSyDU_f1yxtqNzbKrb-DksDYicBw6mS7pP4g",
+  authDomain: "fitbook-b8f06.firebaseapp.com",
+  databaseURL: "https://fitbook-b8f06.firebaseio.com",
+  storageBucket: "fitbook-b8f06.appspot.com",
+};
+const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 
 export default class fitbook extends Component {
-  constructor(props) {
-    super(props);
-    Firebase.initialise();
-  }
   render() {
     return (
-      <Login />
+      <View style={styles.container}>
+        <Text style={styles.welcome}>
+          Welcome to React Native!!
+        </Text>
+        <Text style={styles.instructions}>
+          To get started, edit index.ios.js
+        </Text>
+        <Text style={styles.instructions}>
+          Press Cmd+R to reload,{'\n'}
+          Cmd+D or shake for dev menu
+        </Text>
+      </View>
     );
   }
 }
