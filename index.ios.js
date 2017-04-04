@@ -1,63 +1,83 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
-import React, { Component } from 'react';
+'use strict';
 import {
   AppRegistry,
-  StyleSheet,
+  View,
   Text,
-  View
+  Navigator,
+  AsyncStorage
 } from 'react-native';
-import * as firebase from "firebase";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDU_f1yxtqNzbKrb-DksDYicBw6mS7pP4g",
-  authDomain: "fitbook-b8f06.firebaseapp.com",
-  databaseURL: "https://fitbook-b8f06.firebaseio.com",
-  storageBucket: "fitbook-b8f06.appspot.com",
-};
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+import React, { Component } from 'react';
+
+import Signup from './src/pages/signup';
+import Account from './src/pages/account';
+
+import Header from './src/components/header';
+
+import Firebase from './src/firebase/firebase';
+var app = Firebase.ref("messages/");
 
 
-export default class fitbook extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
-    );
+import styles from './src/styles/common-styles.js';
+
+class rnfirebaseauth extends Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      component: null,
+      loaded: false
+    };
   }
+
+  componentWillMount(){
+
+    AsyncStorage.getItem('user_data').then((user_data_json) => {
+
+      let user_data = JSON.parse(user_data_json);
+      let component = {component: Signup};
+      if(user_data != null){
+        app.authWithCustomToken(user_data.token, (error, authData) => {
+          if(error){
+            this.setState(component);
+          }else{
+            this.setState({component: Account});
+          }
+        });
+      }else{
+        this.setState(component);
+      }
+    });
+
+  }
+
+  render(){
+
+    if(this.state.component){
+      return (
+        <Navigator
+          initialRoute={{component: this.state.component}}
+          configureScene={() => {
+            return Navigator.SceneConfigs.FloatFromRight;
+          }}
+          renderScene={(route, navigator) => {
+            if(route.component){
+              return React.createElement(route.component, { navigator });
+            }
+          }}
+        />
+      );
+    }else{
+      return (
+        <View style={styles.container}>
+          <Header text="React Native Firebase Auth" loaded={this.state.loaded} />
+          <View style={styles.body}></View>
+        </View>
+      );
+    }
+
+  }
+
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
-
-AppRegistry.registerComponent('fitbook', () => fitbook);
+AppRegistry.registerComponent('fitbook', () => rnfirebaseauth);
